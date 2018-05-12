@@ -16,19 +16,21 @@ echo 'FROM sjeandeaux/toolbox-onbuild:latest' | \
 
 ## Run
 
+### in your profile
+
+```bash
+# first argument the volume name
+function toolbox-run {
+    docker volume create ${1}
+    docker run \
+        --env TERM \
+        --link docker-binder:docker  \
+        --mount source=${1},target=/home/$(whoami) \
+        -ti --rm toolbox-$(whoami):latest bash
+}
+```
+
 ```bash
 docker run --privileged --name docker-binder -d docker:stable-dind
-
-docker volume create home
-
-docker run \
-    --env TERM \
-    --link docker-binder:docker  \
-    --mount source=home,target=/home/$(whoami) \
-    -ti --rm toolbox-$(whoami):latest bash
-
-docker run \
- --env TERM \
- --link docker-binder:docker \
- -ti --rm toolbox-$(whoami):latest bash
+toolbox-run home
 ```
