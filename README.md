@@ -14,9 +14,16 @@ docker build --build-arg LOGIN=$(whoami) \
 ## Run
 
 ```bash
+docker run --privileged --name docker-binder -d docker:stable-dind
+
 docker volume create work
 
 docker run \
+    --link docker-binder:docker  \
     --mount source=work,target=/home/$(whoami) \
     -ti --rm tools:latest bash
+
+docker run \
+ --link docker-binder:docker \
+ -ti --rm tools:latest bash
 ```
