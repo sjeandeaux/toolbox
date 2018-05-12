@@ -15,8 +15,9 @@ ARG PACKER_VERSION=1.2.3
 ARG CHEF_VERSION_MAJOR=2.5.3
 ARG CHEF_VERSION=${CHEF_VERSION_MAJOR}-1
 ARG DOCKER_VERSION=18.03.1~ce-0~debian_amd64
+ARG GO_VERSION=1.10.2
 
-RUN apt-get update; apt-get --yes install man sudo bash-completion iptables git \
+RUN apt-get update; apt-get --yes install man sudo bash-completion iptables git tar \
     curl=${CURL_VERSION} \
 	python3=${PYTHON_VERSION} \
 	python3-pip=${PIP3_VERSION} \
@@ -39,6 +40,10 @@ RUN dpkg --install /tmp/chef.deb
 ADD https://download.docker.com/linux/debian/dists/jessie/pool/stable/amd64/docker-ce_${DOCKER_VERSION}.deb /tmp/docker.deb
 RUN dpkg --install /tmp/docker.deb
 
+#GO
+ADD https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz /tmp/go.tar.gz
+RUN tar -C /usr/local -xzf /tmp/go.tar.gz
+
 ONBUILD ARG LOGIN=bob
 ONBUILD ARG UID=1000
 ONBUILD ARG GID=50
@@ -60,5 +65,6 @@ ONBUILD WORKDIR /home/${LOGIN}
 
 #AWS
 ONBUILD RUN pip3 install pyyaml awscli docker-compose --upgrade --user
-ONBUILD ENV PATH=~/.local/bin:$PATH
-ONBUILD ENV DOCKER_HOST="tcp://docker:2375"
+ONBUILD ENV GOPATH=/home/${LOGIN}/project \
+            PATH=${PATH}:/home/${LOGIN}/.local/bin:/usr/local/go/bin:/home/${LOGIN}/project/bin \
+			DOCKER_HOST="tcp://docker:2375"
