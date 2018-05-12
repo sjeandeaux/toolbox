@@ -6,5 +6,5 @@ Dockefile contains my required tools.
 docker build --build-arg LOGIN=$(whoami) \
              --build-arg UID=$(id -u) \
              --build-arg GID=$(id -g) \
-             --tag tools:latest --file Dockerfile
+             --tag tools:latest --file Dockerfile .
 ```
