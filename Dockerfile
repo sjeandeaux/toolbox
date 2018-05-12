@@ -18,7 +18,7 @@ ARG PACKER_VERSION=1.2.3
 ARG CHEF_VERSION_MAJOR=2.5.3
 ARG CHEF_VERSION=${CHEF_VERSION_MAJOR}-1
 
-RUN apt-get update; apt-get --yes install man sudo \
+RUN apt-get update; apt-get --yes install man sudo bash-completion\
     curl=${CURL_VERSION} \
 	python3=${PYTHON_VERSION} \
 	python3-pip=${PIP3_VERSION} \

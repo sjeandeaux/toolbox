@@ -14,5 +14,9 @@ docker build --build-arg LOGIN=$(whoami) \
 ## Run
 
 ```bash
-docker run -v ${HOME}/.aws:/home/$(whoami)/.aws -ti --rm tools:latest bash
+docker volume create work
+
+docker run \
+    --mount source=work,target=/home/$(whoami) \
+    -ti --rm tools:latest bash
 ```
