@@ -1,10 +1,5 @@
 FROM debian:jessie-20180426
 
-ARG LOGIN=bob
-ARG UID=1000
-ARG GID=50
-ARG PASSWORD=youpi
-
 #CURL PYTHON PIP 
 ARG CURL_VERSION=7.38.0-4+deb8u10
 ARG PYTHON_VERSION=3.4.2-2
@@ -44,7 +39,12 @@ RUN dpkg --install /tmp/chef.deb
 ADD https://download.docker.com/linux/debian/dists/jessie/pool/stable/amd64/docker-ce_${DOCKER_VERSION}.deb /tmp/docker.deb
 RUN dpkg --install /tmp/docker.deb
 
-RUN useradd \
+ONBUILD ARG LOGIN=bob
+ONBUILD ARG UID=1000
+ONBUILD ARG GID=50
+ONBUILD ARG PASSWORD=youpi
+
+ONBUILD RUN useradd \
 	--password $(openssl passwd -1 ${PASSWORD}) \
 	--comment 'Go!!!' \
 	--groups sudo,docker \
@@ -55,10 +55,10 @@ RUN useradd \
 	--home-dir /home/${LOGIN} \
 	${LOGIN}
 
-USER ${LOGIN}
-WORKDIR /home/${LOGIN}
+ONBUILD USER ${LOGIN}
+ONBUILD WORKDIR /home/${LOGIN}
 
 #AWS
-RUN pip3 install pyyaml awscli docker-compose --upgrade --user
-ENV PATH=~/.local/bin:$PATH
-ENV DOCKER_HOST="tcp://docker:2375"
+ONBUILD RUN pip3 install pyyaml awscli docker-compose --upgrade --user
+ONBUILD ENV PATH=~/.local/bin:$PATH
+ONBUILD ENV DOCKER_HOST="tcp://docker:2375"

@@ -5,10 +5,10 @@ Dockefile contains my required tools.
 ## Build
 
 ```bash
-docker build --build-arg LOGIN=$(whoami) \
+echo toolbox-onbuild:latest | docker build --build-arg LOGIN=$(whoami) \
              --build-arg UID=$(id -u) \
              --build-arg GID=$(id -g) \
-             --tag tools:latest --file Dockerfile .
+             --tag toolbox-$(whoami):latest --
 ```
 
 ## Run
@@ -21,9 +21,9 @@ docker volume create work
 docker run \
     --link docker-binder:docker  \
     --mount source=work,target=/home/$(whoami) \
-    -ti --rm tools:latest bash
+    -ti --rm toolbox-$(whoami):latest bash
 
 docker run \
  --link docker-binder:docker \
- -ti --rm tools:latest bash
+ -ti --rm toolbox-$(whoami):latest bash
 ```
