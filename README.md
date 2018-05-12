@@ -5,7 +5,7 @@ Dockefile contains my required tools.
 ## Build
 
 ```bash
-echo toolbox-onbuild:latest | docker build --build-arg LOGIN=$(whoami) \
+echo FROM jeandeaux/toolbox-onbuild:latest | docker build --build-arg LOGIN=$(whoami) \
              --build-arg UID=$(id -u) \
              --build-arg GID=$(id -g) \
              --tag toolbox-$(whoami):latest --
