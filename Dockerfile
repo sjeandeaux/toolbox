@@ -17,7 +17,8 @@ ARG CHEF_VERSION=${CHEF_VERSION_MAJOR}-1
 ARG DOCKER_VERSION=18.03.1~ce-0~debian_amd64
 ARG GO_VERSION=1.10.2
 
-RUN apt-get update; apt-get --yes install man sudo bash-completion iptables git tar \
+
+RUN apt-get update  &&  apt-get --yes install man sudo bash-completion iptables git tar apt-transport-https \
     curl=${CURL_VERSION} \
 	python3=${PYTHON_VERSION} \
 	python3-pip=${PIP3_VERSION} \
@@ -26,23 +27,23 @@ RUN apt-get update; apt-get --yes install man sudo bash-completion iptables git 
 	unzip=${UNZIP_VERSION} \
 	ssh=${SSH_VERSION} \
 	jq=${JQ_VERSION} \
-	libltdl7=${LIBLTDL7_VERSION}
+	libltdl7=${LIBLTDL7_VERSION} 
 
 #PACKER
-ADD https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip /tmp/packer.zip
-RUN unzip /tmp/packer.zip -d /usr/local/bin
+RUN curl -sS https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip -o /tmp/packer.zip && \
+    unzip /tmp/packer.zip -d /usr/local/bin
 
 #CHEF
-ADD https://packages.chef.io/files/stable/chefdk/${CHEF_VERSION_MAJOR}/debian/7/chefdk_${CHEF_VERSION}_amd64.deb /tmp/chef.deb
-RUN dpkg --install /tmp/chef.deb
+RUN curl -sS https://packages.chef.io/files/stable/chefdk/${CHEF_VERSION_MAJOR}/debian/7/chefdk_${CHEF_VERSION}_amd64.deb -o /tmp/chef.deb && \
+    dpkg --install /tmp/chef.deb
 
 #DOCKER
-ADD https://download.docker.com/linux/debian/dists/jessie/pool/stable/amd64/docker-ce_${DOCKER_VERSION}.deb /tmp/docker.deb
-RUN dpkg --install /tmp/docker.deb
+RUN curl -sS https://download.docker.com/linux/debian/dists/jessie/pool/stable/amd64/docker-ce_${DOCKER_VERSION}.deb -o /tmp/docker.deb && \
+    dpkg --install /tmp/docker.deb
 
 #GO
-ADD https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz /tmp/go.tar.gz
-RUN tar -C /usr/local -xzf /tmp/go.tar.gz
+RUN curl -sS https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz -o /tmp/go.tar.gz && \
+    tar -C /usr/local -xzf /tmp/go.tar.gz
 
 ONBUILD ARG LOGIN=bob
 ONBUILD ARG UID=1000
@@ -59,6 +60,8 @@ ONBUILD RUN useradd \
 	--gid ${GID} \
 	--home-dir /home/${LOGIN} \
 	${LOGIN}
+
+ONBUILD RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 ONBUILD USER ${LOGIN}
 ONBUILD WORKDIR /home/${LOGIN}
