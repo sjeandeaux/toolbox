@@ -16,6 +16,7 @@ ARG CHEF_VERSION_MAJOR=2.5.3
 ARG CHEF_VERSION=${CHEF_VERSION_MAJOR}-1
 ARG DOCKER_VERSION=18.03.1~ce-0~debian_amd64
 ARG GO_VERSION=1.10.2
+ARG MAVEN_VERSION=3.5.3
 
 
 RUN apt-get update  &&  apt-get --yes install man sudo bash-completion iptables git tar apt-transport-https \
@@ -48,6 +49,13 @@ RUN curl -sS https://download.docker.com/linux/debian/dists/jessie/pool/stable/a
 RUN curl -sS https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz \
     -o /tmp/go.tar.gz && \
     tar -C /usr/local -xzf /tmp/go.tar.gz
+
+#MAVEN
+ENV MAVEN_HOME=/opt/maven
+RUN curl -sS http://apache.claz.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+    -o /tmp/maven.tar.gz && \
+	mkdir -p /opt/maven && \
+    tar --strip-components=1 -C ${MAVEN_HOME} -xzf /tmp/maven.tar.gz
 
 COPY ./skel/* /etc/skel/
 
@@ -82,6 +90,9 @@ ONBUILD RUN git config --global user.name "${GIT_NAME}" && \
 
 #AWS
 ONBUILD RUN pip3 install pyyaml awscli docker-compose --upgrade --user
-ONBUILD ENV GOPATH=/home/${LOGIN}/project \
-            PATH=${PATH}:/home/${LOGIN}/.local/bin:/usr/local/go/bin:/home/${LOGIN}/project/bin \
+ONBUILD ENV GOPATH=/${BASE_DIR}/${LOGIN}/project \
+            PATH=${PATH}:/${BASE_DIR}/${LOGIN}/.local/bin \
+			PATH=${PATH}:/usr/local/go/bin\
+			PATH=${PATH}:/${BASE_DIR}/${LOGIN}/project/bin \
+			PATH=${PATH}:${MAVEN_HOME}/bin \
 			DOCKER_HOST="tcp://docker:2375"

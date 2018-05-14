@@ -13,3 +13,7 @@ echo 'FROM sjeandeaux/toolbox-onbuild:latest' | \
         --build-arg GIT_EMAIL="$(git config --global --get user.email)" \
         --tag toolbox-$(id -nu):latest \
         -
+
+docker run -ti --volume $(pwd)/controls:/controls:ro --rm toolbox-$(id -nu):latest inspec exec /controls/test.rb
+
+
