@@ -1,8 +1,23 @@
-describe package('curl') do
-	it { should be_installed }
+packages = %w(
+  sudo
+  bash-completion
+  iptables
+  git
+  tar
+  apt-transport-https
+  curl
+  python3
+  python3-pip
+  vim
+  unzip
+  ssh
+  jq
+)
+
+packages.each do |pkg|
+  describe package(pkg) do
+    it { should be_installed }
+  end
 end
 
-describe inetd_conf do
-	its("telnet") { should eq nil }
-end
 
