@@ -8,10 +8,13 @@ Dockefile contains my required tools.
 docker build --tag sjeandeaux/toolbox-onbuild:latest .
 
 echo 'FROM sjeandeaux/toolbox-onbuild:latest' | \
-             docker build --build-arg LOGIN=$(whoami) \
-             --build-arg UID=$(id -u) \
-             --build-arg GID=$(id -g) \
-             --tag toolbox-$(whoami):latest -
+    docker build --build-arg LOGIN=$(id -nu) \
+        --build-arg UID=$(id -u) \
+        --build-arg GID=$(id -g) \
+        --build-arg GIT_NAME="$(git config --global --get user.name)" \
+        --build-arg GIT_EMAIL="$(git config --global --get user.email)" \
+        --tag toolbox-$(id -nu):latest \
+        -
 ```
 
 ## Run
@@ -21,12 +24,14 @@ echo 'FROM sjeandeaux/toolbox-onbuild:latest' | \
 ```bash
 # first argument the volume name
 function toolbox-run {
-    docker volume create ${1}
+    nameVolume=${1:-home}
+    docker volume create ${nameVolume}
     docker run \
         --env TERM \
+        --env DISPLAY=${IP}:0 \
         --link docker-binder:docker  \
-        --mount source=${1},target=/home/$(whoami) \
-        -ti --rm toolbox-$(whoami):latest bash
+        --mount source=${nameVolume},target=/home/$(id -nu) \
+        -ti --rm toolbox-$(id -nu):latest bash
 }
 ```
 

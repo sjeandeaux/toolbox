@@ -49,12 +49,17 @@ RUN curl -sS https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz \
     -o /tmp/go.tar.gz && \
     tar -C /usr/local -xzf /tmp/go.tar.gz
 
+COPY ./skel/* /etc/skel/
+
 ONBUILD ARG LOGIN=bob
+ONBUILD ARG BASE_DIR=/home
+ONBUILD ARG GIT_NAME=UserName
+ONBUILD ARG GIT_EMAIL=UserEmail
 ONBUILD ARG UID=1000
 ONBUILD ARG GID=50
 ONBUILD ARG PASSWORD=youpi
 
-ONBUILD RUN useradd \
+ONBUILD RUN mkdir -p ${BASE_DIR} && useradd \
 	--password $(openssl passwd -1 ${PASSWORD}) \
 	--comment 'Go!!!' \
 	--groups sudo,docker \
@@ -62,13 +67,18 @@ ONBUILD RUN useradd \
 	--shell /bin/bash \
 	--uid ${UID} \
 	--gid ${GID} \
-	--home-dir /home/${LOGIN} \
+	--base-dir ${BASE_DIR} \
+	--home-dir ${BASE_DIR}/${LOGIN} \
+	--skel /etc/skel \
 	${LOGIN}
 
 ONBUILD RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 ONBUILD USER ${LOGIN}
-ONBUILD WORKDIR /home/${LOGIN}
+ONBUILD WORKDIR /${BASE_DIR}/${LOGIN}
+
+ONBUILD RUN git config --global user.name "${GIT_NAME}" && \
+      		git config --global user.email ${GIT_EMAIL} 
 
 #AWS
 ONBUILD RUN pip3 install pyyaml awscli docker-compose --upgrade --user
