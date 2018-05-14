@@ -30,19 +30,23 @@ RUN apt-get update  &&  apt-get --yes install man sudo bash-completion iptables 
 	libltdl7=${LIBLTDL7_VERSION} 
 
 #PACKER
-RUN curl -sS https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip -o /tmp/packer.zip && \
+RUN curl -sS https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip \
+    -o /tmp/packer.zip && \
     unzip /tmp/packer.zip -d /usr/local/bin
 
 #CHEF
-RUN curl -sS https://packages.chef.io/files/stable/chefdk/${CHEF_VERSION_MAJOR}/debian/7/chefdk_${CHEF_VERSION}_amd64.deb -o /tmp/chef.deb && \
+RUN curl -sS https://packages.chef.io/files/stable/chefdk/${CHEF_VERSION_MAJOR}/debian/7/chefdk_${CHEF_VERSION}_amd64.deb \
+    -o /tmp/chef.deb && \
     dpkg --install /tmp/chef.deb
 
 #DOCKER
-RUN curl -sS https://download.docker.com/linux/debian/dists/jessie/pool/stable/amd64/docker-ce_${DOCKER_VERSION}.deb -o /tmp/docker.deb && \
+RUN curl -sS https://download.docker.com/linux/debian/dists/jessie/pool/stable/amd64/docker-ce_${DOCKER_VERSION}.deb \
+    -o /tmp/docker.deb && \
     dpkg --install /tmp/docker.deb
 
 #GO
-RUN curl -sS https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz -o /tmp/go.tar.gz && \
+RUN curl -sS https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz \
+    -o /tmp/go.tar.gz && \
     tar -C /usr/local -xzf /tmp/go.tar.gz
 
 ONBUILD ARG LOGIN=bob
