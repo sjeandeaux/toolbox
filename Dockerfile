@@ -91,8 +91,5 @@ ONBUILD RUN git config --global user.name "${GIT_NAME}" && \
 #AWS
 ONBUILD RUN pip3 install pyyaml awscli docker-compose --upgrade --user
 ONBUILD ENV GOPATH=/${BASE_DIR}/${LOGIN}/project \
-            PATH=${PATH}:/${BASE_DIR}/${LOGIN}/.local/bin \
-			PATH=${PATH}:/usr/local/go/bin\
-			PATH=${PATH}:/${BASE_DIR}/${LOGIN}/project/bin \
-			PATH=${PATH}:${MAVEN_HOME}/bin \
+            PATH=${PATH}:/${BASE_DIR}/${LOGIN}/.local/bin:/usr/local/go/bin:/${BASE_DIR}/${LOGIN}/project/bin:${MAVEN_HOME}/bin \
 			DOCKER_HOST="tcp://docker:2375"

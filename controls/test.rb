@@ -21,3 +21,38 @@ packages.each do |pkg|
 end
 
 
+describe command('mvn -version') do
+  its('exit_status') { should eq 1 } ##java not here
+end
+
+describe command('packer -version') do
+  its('exit_status') { should eq 0 }
+end
+
+describe command('foodcritic --version') do
+  its('exit_status') { should eq 0 }
+end
+
+describe command('cookstyle --version') do
+  its('exit_status') { should eq 0 }
+end
+
+describe command('inspec --version') do
+  its('exit_status') { should eq 0 }
+end
+
+describe command('go version') do
+  its('exit_status') { should eq 0 }
+end
+
+describe command('docker --version') do
+  its('exit_status') { should eq 0 }
+end
+
+describe command('aws --version') do
+  its('exit_status') { should eq 0 }
+end
+
+describe command('docker-compose --version') do
+  its('exit_status') { should eq 0 }
+end
