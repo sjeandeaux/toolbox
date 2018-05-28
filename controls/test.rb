@@ -6,7 +6,7 @@ packages = %w(
   tar
   apt-transport-https
   curl
-  ksh
+  zsh
   python3
   python3-pip
   vim

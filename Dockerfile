@@ -18,7 +18,7 @@ ARG GO_VERSION=1.10.2
 ARG MAVEN_VERSION=3.5.3
 
 
-RUN apt-get update  &&  apt-get --yes install man sudo bash-completion iptables git tar apt-transport-https ksh \
+RUN apt-get update  &&  apt-get --yes install man sudo bash-completion iptables git tar apt-transport-https zsh \
     curl \
 	python3=${PYTHON_VERSION} \
 	python3-pip=${PIP3_VERSION} \
