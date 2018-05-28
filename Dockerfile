@@ -1,7 +1,6 @@
 FROM debian:jessie-20180426
 
 #CURL PYTHON PIP 
-ARG CURL_VERSION=7.38.0-4+deb8u10
 ARG PYTHON_VERSION=3.4.2-2
 ARG PIP3_VERSION=1.5.6-5
 ARG VIM_VERSION=2:7.4.488-7+deb8u3
@@ -19,8 +18,8 @@ ARG GO_VERSION=1.10.2
 ARG MAVEN_VERSION=3.5.3
 
 
-RUN apt-get update  &&  apt-get --yes install man sudo bash-completion iptables git tar apt-transport-https \
-    curl=${CURL_VERSION} \
+RUN apt-get update  &&  apt-get --yes install man sudo bash-completion iptables git tar apt-transport-https ksh \
+    curl \
 	python3=${PYTHON_VERSION} \
 	python3-pip=${PIP3_VERSION} \
 	libyaml-dev=${LIBYAML_VERSION}\
