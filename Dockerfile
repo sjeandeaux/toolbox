@@ -14,8 +14,8 @@ ARG PACKER_VERSION=1.2.3
 ARG CHEF_VERSION_MAJOR=2.5.3
 ARG CHEF_VERSION=${CHEF_VERSION_MAJOR}-1
 ARG DOCKER_VERSION=18.03.1~ce-0~debian_amd64
-ARG GO_VERSION=1.10.2
-ARG MAVEN_VERSION=3.5.3
+ARG GO_VERSION=1.12.7
+ARG MAVEN_VERSION=3.6.1
 
 
 RUN apt-get update  &&  apt-get --yes install man sudo bash-completion iptables git tar apt-transport-https zsh \
